@@ -1,0 +1,4 @@
+.env
+.vkbottle
+venv
+__pycache__/

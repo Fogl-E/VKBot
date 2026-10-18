@@ -3,11 +3,13 @@ from app.keyboard import *
 from app.config import *
 from vkbottle.bot import Bot, Message
 import logging
+import time
+from vkbottle import API
 
 logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=config.Token)
-
+api = API(token=config.Token)
 
 @bot.on.message(text="старт")
 async def start(message: Message):
@@ -27,6 +29,16 @@ async def coast(message: Message):
 @bot.on.message(payload={"cmd":"vik"})
 async def vik(message: Message):
     await message.answer("я пошёл, ждём викторию")
+    try:
+        user_info = await api.users.get(user_ids=message.from_id)
+        user_name = user_info[0].first_name
+        await api.messages.send(
+            peer_id=config.Admin_id,
+            message=f"🔔 Вам сообщение от пользователя! {user_name}",
+            random_id=int(time.time())
+        )
+    except Exception as e:
+        print(f"Ошибка при отправке админу: {e}")
 
 
 @bot.on.message(payload={"cmd":"record"})

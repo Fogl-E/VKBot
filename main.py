@@ -4,7 +4,7 @@ from app.config import *
 from vkbottle.bot import Bot, Message
 import logging
 import time
-from vkbottle import API
+from vkbottle import API, GroupEventType, GroupTypes
 
 logging.basicConfig(level=logging.INFO)
 
@@ -49,6 +49,19 @@ async def record(message: Message):
 @bot.on.message(payload={"cmd":"theme"})
 async def theme(message: Message):
     await message.answer("Темы")
+
+
+@bot.on.raw_event(GroupEventType.GROUP_JOIN, dataclass=GroupTypes.GroupJoin)
+async def group_join_handler(event: GroupTypes.GroupJoin):
+    try:
+        await bot.api.messages.send(
+            peer_id=event.object.user_id, 
+            message="Спасибо за подписку!", 
+            random_id=0
+        )
+    except Exception as e:
+        print(f"Не удалось отправить приветствие: {e}")
+
 
 
 bot.run()

@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True) 
-    recording: Mapped[str] = mapped_column(String(100), default="не записан")
+    recording: Mapped[str] = mapped_column(String(100), nullable=True)
 
 
 class Appointment(Base):
